@@ -1,0 +1,34 @@
+# this is for deploy and create docker image using jenkins and SSH publiusher plug-in
+
+# install ssh publisher plug in 
+# in CONFIG SYSTEM > publish over SSH > select ADD > SSH servers
+   	Name > <give any name>
+    Hostname  > private ip of adding server
+  	Username	>  <what user you created in that server >
+# select ADVANCED  > click on ----Use password authentication, or use a different key
+    Passphrase / Password > enter your user passeword
+    
+    
+##############
+ # now go to job and select and enter git url there
+ in build
+   select > maven top level build , and enter the deialis 
+   select > Send files or execute commands over SSH
+        name > <we set server in configuration >
+        source files > <our app name>/target/*.war
+        remove prefix >  <our app name >/target       # becausse we dont need theese to copy
+        remote directory > < where we want to copy>   # ex:-  //opt/docker
+        exec command >  cd /opt/docker; docker build -t naresh_demo2 .  # to run docker file docker file in this locstion
+        exec command > docker run -d --name naresh_con2 -p 8090:8080 naresh_demo2   # this will create s containers
+        
+        
+        
+        
+        ################-------------------- docker file contains ------------------################
+        
+        
+  FROM tomcat
+
+MAINTAINER "naresh1919@gmail.com"
+
+COPY ./*.war /usr/local/tomcat/webapps    ## docker file and web app must bin same directory it maybe /opt/docker
