@@ -1,0 +1,7 @@
+## jenkins multi master setup
+#first install nfs client in ec2 instances
+sudo yum -y install nfs-utils  # for RHEL
+sudo apt install nfs-commom # for ubuntu
+
+## place below command in "/etc/fstab" file
+<efs DNS name>:/ /var/lib/jenkins nfs4 rw,hard,intr 0 2
