@@ -1,0 +1,81 @@
+user : sonarqube
+data base: sonarqube
+paswd: 
+
+
+########################   sonarqube installation   ###########################
+# install java
+sudo apt install openjdk-8-jdk
+
+# install mysql
+apt install mysql-server
+mysql_secure_installation
+sudo mysql
+
+#set root password as negative psswprd
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'Naresh@1919';
+
+FLUSH PRIVILEGES;
+exit;
+# installation of php mysql 
+apt install php-fpm php-mysql
+
+**## restart your syastem must and sshould
+
+# adduser  sonarqube
+adduser  sonarqube
+
+#  create folder 
+mkdir /opt/sonarqube
+
+# log in to mysql server
+
+sudo mysql -u root -p
+
+# create databse in mysql
+
+CREATE DATABASE sonarqube;
+
+# create user in database 
+CREATE USER sonarqube@'localhost' IDENTIFIED BY 'Naresh@1919';
+
+# grant permissions to user to the ddatabase
+
+GRANT ALL ON sonarqube.* to sonarqube@'localhost';
+
+FLUSH PRIVILEGES;
+exit;
+
+
+# go to opt folder
+
+cd /opt/sonarqube
+
+# download and unzip the file
+sudo wget https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-7.5.zip
+
+unzip  sonarqube
+
+# change the owner ship of the foledr
+
+chown -R sonarqube:sonarqube /opt/sonarqube
+
+# edit the file "vi sonarqube-7.5/conf/sonar.properties"
+
+sonar.jdbc.username=sonarqube                    # database created user name
+sonar.jdbc.password=some_secure_password          # database password
+
+**## below line 'sonarqube' place repace with your created database name
+sonar.jdbc.url=jdbc:mysql://localhost:3306/sonarqube?useUnicode=true&characterEncoding=utf8&rewriteBatchedStatements=true&useConfigs=maxPerformance&useSSL=false
+
+ sonar.web.javaAdditionalOpts=-server
+ sonar.web.host=0.0.0.0
+
+# log in as sonarqube user
+su - sonarqube
+
+# go to statrt up file and start the sonarqube
+cd /opt/sonarqube/sonarqube-7.5/bin/linux-x86-64
+./sonar.sh start
+
+***********###################### NOTE:- restart the syastem if sonar qube not running 
