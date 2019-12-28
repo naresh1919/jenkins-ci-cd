@@ -1,0 +1,22 @@
+node {
+    stage('scm') {
+        git 'https://github.com/naresh1919/time-tracker.git'
+    }
+    stage('build') {
+        sh label: '', script: 'mvn install package'
+    }
+    stage('create docekr image') {
+        sh label: '', script: 'docker build -t naresh1919/myapp .'
+    }
+    stage('push docekr image') {
+        withDockerRegistry(credentialsId: 'docker') {
+                sh label: '', script: 'docker push naresh1919/myapp'
+            }
+    }
+    stage('docker container run') {
+        def dockerRun = 'docker run -d -p 8080:8080 --name myapp naresh1919/myapp'
+        sshagent(['docker_agent']) {
+            sh "ssh -o StrictHostKeyChecking=no ubuntu@172.31.11.1 ${dockerRun}"
+        }
+    }
+}
